@@ -14,89 +14,114 @@
     font-family: 'Courier New', monospace;
     color: #eee;
   }
-  #game-container {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-  }
-  canvas {
-    border: 2px solid #ff6b9d;
-    background: #1a0e1f;
-    display: block;
-  }
-  #sidebar {
-    width: 130px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .panel {
-    background: #3d2245;
-    border: 1px solid #ff6b9d;
-    padding: 12px;
-    border-radius: 4px;
-  }
-  .panel h3 {
-    color: #ff6b9d;
-    font-size: 12px;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .panel p {
-    font-size: 22px;
-    font-weight: bold;
-    color: #fff;
-  }
-  #next-canvas {
-    background: #0f0f23;
-    display: block;
-    border: none;
-  }
-  #controls {
-    font-size: 11px;
-    line-height: 1.8;
-    color: #aaa;
-  }
-  #controls span { color: #ff6b9d; }
+  #game-container { display: flex; gap: 16px; align-items: flex-start; }
+  #board-col { display: flex; flex-direction: column; gap: 8px; }
+  #board-wrapper { position: relative; }
+  canvas { border: 2px solid #ff6b9d; background: #1a0e1f; display: block; }
+  #next-canvas { border: none; background: #1a0e1f; }
+
+  #sidebar { width: 130px; display: flex; flex-direction: column; gap: 10px; }
+  .panel { background: #3d2245; border: 1px solid #ff6b9d; padding: 8px 10px; border-radius: 4px; }
+  .panel h3 { color: #ff6b9d; font-size: 11px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .stat-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
+  .stat-row:last-child { margin-bottom: 0; }
+  .stat-lbl { font-size: 10px; color: #c9b1ff; }
+  .stat-val { font-size: 17px; font-weight: bold; color: #fff; }
+
+  #ctrl-panel { font-size: 10px; line-height: 1.75; color: #aaa; }
+  #ctrl-panel span { color: #ff6b9d; }
+
+  #replay-list { max-height: 155px; overflow-y: auto; }
+  #replay-list::-webkit-scrollbar { width: 3px; }
+  #replay-list::-webkit-scrollbar-thumb { background: #ff6b9d; border-radius: 2px; }
+  .ritem { padding: 5px 2px; border-bottom: 1px solid #52264e; cursor: pointer; transition: padding-left 0.1s; }
+  .ritem:last-child { border-bottom: none; }
+  .ritem:hover { padding-left: 5px; }
+  .ritem-score { font-size: 13px; font-weight: bold; color: #ffd6e0; }
+  .ritem-meta { font-size: 10px; color: #999; margin-top: 1px; }
+
   #message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(45,27,51,0.92);
-    border: 2px solid #ff6b9d;
-    padding: 24px 32px;
-    text-align: center;
-    border-radius: 6px;
-    display: none;
+    background: rgba(45,27,51,0.96); border: 2px solid #ff6b9d;
+    padding: 20px 26px; text-align: center; border-radius: 8px;
+    display: none; z-index: 10; min-width: 190px;
   }
-  #message h2 { color: #ff6b9d; margin-bottom: 10px; }
-  #message p { color: #ccc; font-size: 13px; }
-  #level-display { color: #fff; font-size: 22px; font-weight: bold; }
+  #message h2 { color: #ff6b9d; margin-bottom: 10px; font-size: 17px; }
+  .msg-detail { font-size: 12px; color: #ccc; line-height: 1.9; margin-bottom: 12px; }
+  .mbtn {
+    display: inline-block; margin: 3px;
+    background: transparent; color: #ff6b9d;
+    border: 1px solid #ff6b9d; padding: 5px 12px;
+    border-radius: 4px; cursor: pointer;
+    font-family: 'Courier New', monospace; font-size: 11px;
+  }
+  .mbtn:hover { background: #ff6b9d; color: #fff; }
+  .mbtn.primary { background: #ff6b9d; color: #fff; }
+  .mbtn.primary:hover { background: #e0527f; }
+
+  #replay-bar {
+    display: none; align-items: center; gap: 7px;
+    background: #3d2245; border: 1px solid #ff6b9d;
+    border-radius: 4px; padding: 7px 10px; width: 304px;
+  }
+  .rbtn {
+    background: #52264e; color: #ffd6e0;
+    border: 1px solid #ff6b9d; padding: 3px 7px;
+    border-radius: 3px; cursor: pointer; font-size: 12px;
+    min-width: 26px; text-align: center;
+  }
+  .rbtn:hover { background: #ff6b9d; color: #fff; }
+  .rbtn:disabled { opacity: 0.3; cursor: default; background: #52264e; }
+  #replay-tag { font-size: 10px; color: #ff6b9d; letter-spacing: 1px; white-space: nowrap; }
+  #rp-track { flex: 1; height: 5px; background: #52264e; border-radius: 3px; cursor: pointer; }
+  #rp-fill { height: 100%; background: #ff6b9d; border-radius: 3px; width: 0%; pointer-events: none; }
+  #rp-counter { font-size: 10px; color: #ffd6e0; white-space: nowrap; }
+  #speed-sel {
+    background: #52264e; color: #ffd6e0;
+    border: 1px solid #ff6b9d; padding: 3px 4px;
+    border-radius: 3px; font-size: 10px;
+  }
 </style>
 </head>
 <body>
 <div id="game-container">
-  <canvas id="board" width="300" height="600"></canvas>
+  <div id="board-col">
+    <div id="board-wrapper">
+      <canvas id="board" width="300" height="600"></canvas>
+      <div id="message">
+        <h2 id="msg-title"></h2>
+        <div class="msg-detail" id="msg-detail"></div>
+        <div id="msg-btns"></div>
+      </div>
+    </div>
+    <div id="replay-bar">
+      <span id="replay-tag">복습</span>
+      <button class="rbtn" id="btn-prev" onclick="replayStep(-1)">&#9664;</button>
+      <button class="rbtn" id="btn-pp"   onclick="toggleReplayPlay()">&#9654;</button>
+      <button class="rbtn" id="btn-next" onclick="replayStep(1)">&#9654;&#9654;</button>
+      <div id="rp-track" onclick="seekReplay(event)"><div id="rp-fill"></div></div>
+      <span id="rp-counter">0 / 0</span>
+      <select id="speed-sel" onchange="setReplaySpeed(this.value)">
+        <option value="1">1x</option>
+        <option value="2">2x</option>
+        <option value="4">4x</option>
+      </select>
+      <button class="rbtn" onclick="exitReplay()">&#x2715;</button>
+    </div>
+  </div>
   <div id="sidebar">
     <div class="panel">
       <h3>다음 블록</h3>
-      <canvas id="next-canvas" width="100" height="100"></canvas>
+      <canvas id="next-canvas" width="110" height="64"></canvas>
     </div>
     <div class="panel">
-      <h3>점수</h3>
-      <p id="score">0</p>
+      <div class="stat-row"><span class="stat-lbl">점수</span><span class="stat-val" id="score">0</span></div>
+      <div class="stat-row"><span class="stat-lbl">레벨</span><span class="stat-val" id="level">1</span></div>
+      <div class="stat-row"><span class="stat-lbl">줄 수</span><span class="stat-val" id="lines">0</span></div>
     </div>
-    <div class="panel">
-      <h3>레벨</h3>
-      <p id="level">1</p>
-    </div>
-    <div class="panel">
-      <h3>줄 수</h3>
-      <p id="lines">0</p>
-    </div>
-    <div class="panel" id="controls">
+    <div class="panel" id="ctrl-panel">
       <h3>조작</h3>
       <span>←→</span> 이동<br>
       <span>↑</span> 회전<br>
@@ -104,69 +129,209 @@
       <span>Space</span> 즉시 낙하<br>
       <span>P</span> 일시정지
     </div>
+    <div class="panel">
+      <h3>복습 기록</h3>
+      <div id="replay-list"><span style="color:#888;font-size:11px">없음</span></div>
+    </div>
   </div>
-</div>
-
-<div id="message">
-  <h2 id="msg-title">게임 오버</h2>
-  <p id="msg-body">스페이스바를 눌러 재시작</p>
 </div>
 
 <script>
 const COLS = 10, ROWS = 20, BLOCK = 30;
-const board = document.getElementById('board');
-const ctx = board.getContext('2d');
+const board  = document.getElementById('board');
+const ctx    = board.getContext('2d');
 const nextCanvas = document.getElementById('next-canvas');
-const nCtx = nextCanvas.getContext('2d');
+const nCtx   = nextCanvas.getContext('2d');
 
 const COLORS = [
   null,
-  '#a8d8ea', // I - 파스텔 블루
-  '#ffd6e0', // O - 파스텔 핑크
-  '#c9b1ff', // T - 파스텔 라벤더
-  '#b5ead7', // S - 파스텔 민트
-  '#ffb7b2', // Z - 파스텔 코랄
-  '#ffdac1', // J - 파스텔 피치
-  '#d4f1c4', // L - 파스텔 연두
+  '#a8d8ea', '#ffd6e0', '#c9b1ff', '#b5ead7',
+  '#ffb7b2', '#ffdac1', '#d4f1c4',
 ];
-
 const SHAPES = [
   null,
-  [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]], // I
-  [[2,2],[2,2]],                               // O
-  [[0,3,0],[3,3,3],[0,0,0]],                  // T
-  [[0,4,4],[4,4,0],[0,0,0]],                  // S
-  [[5,5,0],[0,5,5],[0,0,0]],                  // Z
-  [[6,0,0],[6,6,6],[0,0,0]],                  // J
-  [[0,0,7],[7,7,7],[0,0,0]],                  // L
+  [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],
+  [[2,2],[2,2]],
+  [[0,3,0],[3,3,3],[0,0,0]],
+  [[0,4,4],[4,4,0],[0,0,0]],
+  [[5,5,0],[0,5,5],[0,0,0]],
+  [[6,0,0],[6,6,6],[0,0,0]],
+  [[0,0,7],[7,7,7],[0,0,0]],
 ];
 
-let grid, piece, nextPiece, score, level, lines, dropInterval, lastTime, paused, gameOver;
+// ── Game state ───────────────────────────────────────────────────────────────
+let grid, piece, nextPiece, score, level, lines;
+let dropInterval, lastTime, paused, gameOver;
+let accumulator = 0;
+
+// ── Recording state ──────────────────────────────────────────────────────────
+let snapshots = [];
+
+// ── Replay state ─────────────────────────────────────────────────────────────
+let replayMode    = false;
+let activeReplay  = null;
+let replayIdx     = 0;
+let replayPlaying = false;
+let replaySpeed   = 1;
+let replayTimer   = null;
+let replayHighlight = null;
+const STEP_MS = 650;
+
+let savedReplays = [];
+
+// ── Replay persistence ───────────────────────────────────────────────────────
+
+function loadSaved() {
+  try { savedReplays = JSON.parse(localStorage.getItem('tetrisReplays')) || []; }
+  catch { savedReplays = []; }
+}
+
+function saveReplay() {
+  if (!snapshots.length) return;
+  loadSaved();
+  savedReplays.unshift({
+    date: new Date().toLocaleString('ko-KR', {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'}),
+    score, level, lines,
+    snapshots: snapshots.map(s => ({
+      grid:   s.grid.map(r => [...r]),
+      landed: s.landed ? { ...s.landed, shape: s.landed.shape.map(r => [...r]) } : null,
+      score: s.score, level: s.level, lines: s.lines,
+    })),
+  });
+  if (savedReplays.length > 5) savedReplays.length = 5;
+  try { localStorage.setItem('tetrisReplays', JSON.stringify(savedReplays)); } catch {}
+  renderReplayList();
+}
+
+function captureSnapshot(landedPiece) {
+  snapshots.push({
+    grid:   grid.map(r => [...r]),
+    landed: landedPiece
+      ? { id: landedPiece.id, shape: landedPiece.shape.map(r => [...r]), x: landedPiece.x, y: landedPiece.y }
+      : null,
+    score, level, lines,
+  });
+}
+
+function renderReplayList() {
+  const el = document.getElementById('replay-list');
+  if (!savedReplays.length) {
+    el.innerHTML = '<span style="color:#888;font-size:11px">없음</span>';
+    return;
+  }
+  el.innerHTML = savedReplays.map((r, i) => `
+    <div class="ritem" onclick="startReplay(${i})">
+      <div class="ritem-score">${r.score.toLocaleString()}</div>
+      <div class="ritem-meta">Lv.${r.level} · ${r.lines}줄 · ${r.date}</div>
+    </div>
+  `).join('');
+}
+
+// ── Replay playback ──────────────────────────────────────────────────────────
+
+function startReplay(index) {
+  loadSaved();
+  const data = savedReplays[index];
+  if (!data || !data.snapshots.length) return;
+
+  replayMode    = true;
+  activeReplay  = data;
+  replayIdx     = 0;
+  replayPlaying = false;
+  replaySpeed   = 1;
+  document.getElementById('speed-sel').value    = '1';
+  document.getElementById('btn-pp').textContent = '▶';
+  document.getElementById('replay-bar').style.display = 'flex';
+  document.getElementById('message').style.display    = 'none';
+  applySnapshot(0);
+}
+
+function applySnapshot(idx) {
+  const snap = activeReplay.snapshots[idx];
+  grid   = snap.grid.map(r => [...r]);
+  replayHighlight = snap.landed;
+  score  = snap.score; level = snap.level; lines = snap.lines;
+  piece  = null; nextPiece = null;
+  updateUI(); draw();
+
+  const total = activeReplay.snapshots.length;
+  document.getElementById('rp-counter').textContent    = `${idx + 1} / ${total}`;
+  document.getElementById('rp-fill').style.width       = `${((idx + 1) / total) * 100}%`;
+  document.getElementById('btn-prev').disabled = idx === 0;
+  document.getElementById('btn-next').disabled = idx >= total - 1;
+}
+
+function replayStep(dir) {
+  if (!activeReplay) return;
+  replayIdx = Math.max(0, Math.min(activeReplay.snapshots.length - 1, replayIdx + dir));
+  applySnapshot(replayIdx);
+}
+
+function toggleReplayPlay() {
+  replayPlaying = !replayPlaying;
+  document.getElementById('btn-pp').textContent = replayPlaying ? '⏸' : '▶';
+  if (replayPlaying) scheduleStep();
+  else { clearTimeout(replayTimer); replayTimer = null; }
+}
+
+function scheduleStep() {
+  clearTimeout(replayTimer);
+  replayTimer = setTimeout(() => {
+    if (!replayPlaying || !activeReplay) return;
+    if (replayIdx >= activeReplay.snapshots.length - 1) {
+      replayPlaying = false;
+      document.getElementById('btn-pp').textContent = '▶';
+      return;
+    }
+    replayIdx++;
+    applySnapshot(replayIdx);
+    scheduleStep();
+  }, STEP_MS / replaySpeed);
+}
+
+function setReplaySpeed(val) {
+  replaySpeed = Number(val);
+  if (replayPlaying) { clearTimeout(replayTimer); scheduleStep(); }
+}
+
+function seekReplay(e) {
+  if (!activeReplay) return;
+  const rect  = document.getElementById('rp-track').getBoundingClientRect();
+  const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  replayIdx   = Math.round(ratio * (activeReplay.snapshots.length - 1));
+  applySnapshot(replayIdx);
+}
+
+function exitReplay() {
+  replayMode = false; activeReplay = null;
+  replayPlaying = false;
+  clearTimeout(replayTimer); replayTimer = null;
+  document.getElementById('replay-bar').style.display = 'none';
+  startGame();
+}
+
+// ── Core game ────────────────────────────────────────────────────────────────
 
 function newGrid() {
   return Array.from({length: ROWS}, () => new Array(COLS).fill(0));
 }
 
 function randomPiece() {
-  const id = Math.floor(Math.random() * 7) + 1;
+  const id    = Math.floor(Math.random() * 7) + 1;
   const shape = SHAPES[id].map(r => [...r]);
-  return {
-    id, shape,
-    x: Math.floor(COLS / 2) - Math.floor(shape[0].length / 2),
-    y: 0
-  };
+  return { id, shape, x: Math.floor(COLS / 2) - Math.floor(shape[0].length / 2), y: 0 };
 }
 
 function rotate(shape) {
   const rows = shape.length, cols = shape[0].length;
-  const result = Array.from({length: cols}, () => new Array(rows).fill(0));
+  const res  = Array.from({length: cols}, () => new Array(rows).fill(0));
   for (let r = 0; r < rows; r++)
     for (let c = 0; c < cols; c++)
-      result[c][rows - 1 - r] = shape[r][c];
-  return result;
+      res[c][rows - 1 - r] = shape[r][c];
+  return res;
 }
 
-function collides(p, dx=0, dy=0, sh=null) {
+function collides(p, dx = 0, dy = 0, sh = null) {
   const shape = sh || p.shape;
   for (let r = 0; r < shape.length; r++)
     for (let c = 0; c < shape[r].length; c++) {
@@ -180,10 +345,7 @@ function collides(p, dx=0, dy=0, sh=null) {
 
 function merge() {
   piece.shape.forEach((row, r) =>
-    row.forEach((val, c) => {
-      if (val && piece.y + r >= 0)
-        grid[piece.y + r][piece.x + c] = val;
-    })
+    row.forEach((val, c) => { if (val && piece.y + r >= 0) grid[piece.y + r][piece.x + c] = val; })
   );
 }
 
@@ -191,15 +353,11 @@ function clearLines() {
   let cleared = 0;
   for (let r = ROWS - 1; r >= 0; r--) {
     if (grid[r].every(v => v)) {
-      grid.splice(r, 1);
-      grid.unshift(new Array(COLS).fill(0));
-      cleared++;
-      r++;
+      grid.splice(r, 1); grid.unshift(new Array(COLS).fill(0)); cleared++; r++;
     }
   }
   if (cleared) {
-    const pts = [0, 100, 300, 500, 800];
-    score += (pts[cleared] || 800) * level;
+    score += ([0, 100, 300, 500, 800][cleared] || 800) * level;
     lines += cleared;
     level = Math.floor(lines / 10) + 1;
     dropInterval = Math.max(100, 1000 - (level - 1) * 90);
@@ -208,14 +366,13 @@ function clearLines() {
 }
 
 function updateUI() {
-  document.getElementById('score').textContent = score;
+  document.getElementById('score').textContent = score.toLocaleString();
   document.getElementById('level').textContent = level;
   document.getElementById('lines').textContent = lines;
 }
 
-function drawBlock(context, x, y, colorId, size=BLOCK) {
-  const color = COLORS[colorId];
-  context.fillStyle = color;
+function drawBlock(context, x, y, colorId, size = BLOCK) {
+  context.fillStyle = COLORS[colorId];
   context.fillRect(x * size + 1, y * size + 1, size - 2, size - 2);
   context.fillStyle = 'rgba(255,255,255,0.25)';
   context.fillRect(x * size + 1, y * size + 1, size - 2, 4);
@@ -225,23 +382,9 @@ function drawBlock(context, x, y, colorId, size=BLOCK) {
   context.fillRect(x * size + 1, y * size + size - 4, size - 2, 3);
 }
 
-function drawGhost() {
-  let dy = 0;
-  while (!collides(piece, 0, dy + 1)) dy++;
-  if (dy === 0) return;
-  ctx.globalAlpha = 0.2;
-  piece.shape.forEach((row, r) =>
-    row.forEach((val, c) => {
-      if (val) drawBlock(ctx, piece.x + c, piece.y + r + dy, val);
-    })
-  );
-  ctx.globalAlpha = 1;
-}
-
 function draw() {
   ctx.clearRect(0, 0, board.width, board.height);
 
-  // grid lines
   ctx.strokeStyle = 'rgba(255,255,255,0.04)';
   for (let r = 0; r < ROWS; r++) {
     ctx.beginPath(); ctx.moveTo(0, r * BLOCK); ctx.lineTo(COLS * BLOCK, r * BLOCK); ctx.stroke();
@@ -250,119 +393,166 @@ function draw() {
     ctx.beginPath(); ctx.moveTo(c * BLOCK, 0); ctx.lineTo(c * BLOCK, ROWS * BLOCK); ctx.stroke();
   }
 
-  // board
   grid.forEach((row, r) => row.forEach((val, c) => { if (val) drawBlock(ctx, c, r, val); }));
 
-  // ghost
-  if (!gameOver && !paused) drawGhost();
-
-  // current piece
-  if (!gameOver) {
-    piece.shape.forEach((row, r) =>
+  // Replay: white highlight on the just-landed piece
+  if (replayMode && replayHighlight) {
+    const p = replayHighlight;
+    ctx.globalAlpha = 0.4;
+    ctx.fillStyle = '#fff';
+    p.shape.forEach((row, r) =>
       row.forEach((val, c) => {
-        if (val) drawBlock(ctx, piece.x + c, piece.y + r, val);
+        if (val) ctx.fillRect((p.x + c) * BLOCK + 4, (p.y + r) * BLOCK + 4, BLOCK - 8, BLOCK - 8);
       })
+    );
+    ctx.globalAlpha = 1;
+  }
+
+  // Play mode: ghost + current piece
+  if (!replayMode && !gameOver && !paused && piece) {
+    let dy = 0;
+    while (!collides(piece, 0, dy + 1)) dy++;
+    if (dy > 0) {
+      ctx.globalAlpha = 0.18;
+      piece.shape.forEach((row, r) =>
+        row.forEach((val, c) => { if (val) drawBlock(ctx, piece.x + c, piece.y + r + dy, val); })
+      );
+      ctx.globalAlpha = 1;
+    }
+    piece.shape.forEach((row, r) =>
+      row.forEach((val, c) => { if (val) drawBlock(ctx, piece.x + c, piece.y + r, val); })
     );
   }
 
-  // next piece
-  nCtx.clearRect(0, 0, 100, 100);
-  const ns = 20, shape = nextPiece.shape;
-  const ox = Math.floor((5 - shape[0].length) / 2);
-  const oy = Math.floor((5 - shape.length) / 2);
-  shape.forEach((row, r) =>
-    row.forEach((val, c) => {
-      if (val) {
+  // Next piece preview
+  nCtx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
+  if (nextPiece && !replayMode) {
+    const ns = 16, shape = nextPiece.shape;
+    const ox = Math.floor((nextCanvas.width  / ns - shape[0].length) / 2);
+    const oy = Math.floor((nextCanvas.height / ns - shape.length)    / 2);
+    shape.forEach((row, r) =>
+      row.forEach((val, c) => {
+        if (!val) return;
         nCtx.fillStyle = COLORS[val];
         nCtx.fillRect((ox + c) * ns + 1, (oy + r) * ns + 1, ns - 2, ns - 2);
-        nCtx.fillStyle = 'rgba(255,255,255,0.25)';
+        nCtx.fillStyle = 'rgba(255,255,255,0.3)';
         nCtx.fillRect((ox + c) * ns + 1, (oy + r) * ns + 1, ns - 2, 3);
-      }
-    })
-  );
+      })
+    );
+  } else if (replayMode) {
+    nCtx.fillStyle = '#ff6b9d';
+    nCtx.font = '11px Courier New';
+    nCtx.textAlign = 'center';
+    nCtx.textBaseline = 'middle';
+    nCtx.fillText('복습 중', nextCanvas.width / 2, nextCanvas.height / 2);
+  }
 }
 
 function dropPiece() {
   if (!collides(piece, 0, 1)) {
     piece.y++;
   } else {
+    const landed = { id: piece.id, shape: piece.shape.map(r => [...r]), x: piece.x, y: piece.y };
     merge();
     clearLines();
+    captureSnapshot(landed);
     piece = nextPiece;
     nextPiece = randomPiece();
     if (collides(piece)) {
       gameOver = true;
-      document.getElementById('msg-title').textContent = '게임 오버';
-      document.getElementById('msg-body').textContent = `점수: ${score}\n스페이스바로 재시작`;
-      document.getElementById('message').style.display = 'block';
+      saveReplay();
+      showOverlay('게임 오버',
+        `점수 <b style="color:#ffd6e0;font-size:20px">${score.toLocaleString()}</b><br>레벨 ${level} · ${lines}줄`,
+        [
+          snapshots.length ? { label: '복습 보기', fn: () => startReplay(0) } : null,
+          { label: '재시작', primary: true, fn: startGame },
+        ]
+      );
     }
   }
 }
 
 function hardDrop() {
-  while (!collides(piece, 0, 1)) {
-    piece.y++;
-    score += 2;
-  }
-  dropPiece();
-  updateUI();
+  while (!collides(piece, 0, 1)) { piece.y++; score += 2; }
+  dropPiece(); updateUI();
+}
+
+function showOverlay(title, detail, buttons) {
+  document.getElementById('msg-title').textContent  = title;
+  document.getElementById('msg-detail').innerHTML   = detail;
+  const btns = document.getElementById('msg-btns');
+  btns.innerHTML = '';
+  buttons.filter(Boolean).forEach(b => {
+    const el = document.createElement('button');
+    el.className = 'mbtn' + (b.primary ? ' primary' : '');
+    el.textContent = b.label;
+    el.onclick = b.fn;
+    btns.appendChild(el);
+  });
+  document.getElementById('message').style.display = 'block';
 }
 
 function startGame() {
+  if (replayMode) return;
   grid = newGrid();
-  piece = randomPiece();
-  nextPiece = randomPiece();
+  piece = randomPiece(); nextPiece = randomPiece();
   score = 0; level = 1; lines = 0;
-  dropInterval = 1000;
-  paused = false; gameOver = false;
-  lastTime = 0;
+  dropInterval = 1000; paused = false; gameOver = false;
+  lastTime = 0; accumulator = 0; snapshots = [];
   document.getElementById('message').style.display = 'none';
   updateUI();
   requestAnimationFrame(loop);
 }
 
-let accumulator = 0;
 function loop(timestamp) {
-  if (gameOver) return;
+  if (gameOver || replayMode) return;
   if (paused) { requestAnimationFrame(loop); return; }
   const delta = timestamp - (lastTime || timestamp);
   lastTime = timestamp;
   accumulator += delta;
-  if (accumulator >= dropInterval) {
-    dropPiece();
-    accumulator = 0;
-  }
+  if (accumulator >= dropInterval) { dropPiece(); accumulator = 0; }
   draw();
   if (!gameOver) requestAnimationFrame(loop);
 }
 
 document.addEventListener('keydown', e => {
+  if (replayMode) {
+    if (e.key === 'Escape')     exitReplay();
+    if (e.key === 'ArrowLeft')  replayStep(-1);
+    if (e.key === 'ArrowRight') replayStep(1);
+    if (e.code === 'Space')     toggleReplayPlay();
+    e.preventDefault();
+    return;
+  }
+
   if (e.code === 'Space') {
-    if (gameOver) { startGame(); return; }
-    hardDrop(); return;
+    if (gameOver) startGame(); else hardDrop();
+    e.preventDefault(); return;
   }
   if (e.key === 'p' || e.key === 'P') {
     if (gameOver) return;
     paused = !paused;
     if (paused) {
-      document.getElementById('msg-title').textContent = '일시정지';
-      document.getElementById('msg-body').textContent = 'P키로 재개';
-      document.getElementById('message').style.display = 'block';
+      showOverlay('일시정지', '', [{
+        label: '재개', primary: true,
+        fn: () => { paused = false; document.getElementById('message').style.display = 'none'; lastTime = 0; }
+      }]);
     } else {
       document.getElementById('message').style.display = 'none';
       lastTime = 0;
     }
-    return;
+    e.preventDefault(); return;
   }
   if (gameOver || paused) return;
-  switch(e.key) {
+
+  switch (e.key) {
     case 'ArrowLeft':  if (!collides(piece, -1)) piece.x--; break;
     case 'ArrowRight': if (!collides(piece,  1)) piece.x++; break;
     case 'ArrowDown':  if (!collides(piece, 0, 1)) { piece.y++; score++; updateUI(); } break;
     case 'ArrowUp': {
       const r = rotate(piece.shape);
-      if (!collides(piece, 0, 0, r)) piece.shape = r;
-      else if (!collides(piece, 1, 0, r)) { piece.shape = r; piece.x++; }
+      if      (!collides(piece,  0, 0, r)) piece.shape = r;
+      else if (!collides(piece,  1, 0, r)) { piece.shape = r; piece.x++; }
       else if (!collides(piece, -1, 0, r)) { piece.shape = r; piece.x--; }
       break;
     }
@@ -371,6 +561,8 @@ document.addEventListener('keydown', e => {
   e.preventDefault();
 });
 
+loadSaved();
+renderReplayList();
 startGame();
 </script>
 </body>
